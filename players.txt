@@ -1,0 +1,5 @@
+b BluePlayer1
+b BluePlayer2
+r RedPlayer1
+r RedPlayer2
+- UnusedPlayer
