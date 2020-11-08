@@ -1,5 +1,5 @@
-b BluePlayer1
-b BluePlayer2
-r RedPlayer1
-r RedPlayer2
-- UnusedPlayer
+BluePlayer1|Aatrox|b
+BluePlayer2|Ahri|b
+RedPlayer1|Akali|r
+RedPlayer2|Alistar|r
+UnusedPlayer|Amumu|-

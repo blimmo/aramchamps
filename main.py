@@ -48,14 +48,15 @@ class StitchImage(LazyImage):
         self.height += height
 
 
-def side(players, color):
+def side(players, banned, color):
     champs = []
     images_by_player = []
     icons = []
     # collect
     for player in players:
         s = cass.get_summoner(name=player)
-        champs.append([c.champion for c in s.champion_masteries if c.level > 0])
+        champs.append([c.champion for c in s.champion_masteries
+                       if c.level > 0 and c.champion.name.lower() not in banned])
         images_by_player.append([])
         icons.append(s.profile_icon.image)
     # choose
@@ -85,12 +86,12 @@ def side(players, color):
     return out_img.draw(color, OUTLINE)
 
 
-def make_image(blue_team, red_team):
+def make_image(blue_team, red_team, banned):
     both_img = StitchImage()
     print("---Blue team---")
-    both_img.add_right(side(blue_team, "DeepSkyBlue"))
+    both_img.add_right(side(blue_team, banned, "DeepSkyBlue"))
     print("---Red team---")
-    both_img.add_right(side(red_team, "DarkRed"))
+    both_img.add_right(side(red_team, banned, "DarkRed"))
     out = both_img.draw()
     out.save("out.png")
     out.show()
@@ -99,13 +100,18 @@ def make_image(blue_team, red_team):
 def get_teams():
     blue_team = []
     red_team = []
+    banned = set()
     with open("players.txt", encoding="utf-8") as f:
         for line in f:
-            if line[0] == "b":
-                blue_team.append(line[2:].strip())
-            elif line[0] == "r":
-                red_team.append(line[2:].strip())
-    return blue_team, red_team
+            player, champ, team = line.strip().split("|")
+            if team == "b":
+                blue_team.append(player)
+            elif team == "r":
+                red_team.append(player)
+            else:
+                continue
+            banned.add(champ.lower())
+    return blue_team, red_team, banned
 
 
 def main():
