@@ -1,0 +1,2 @@
+cassiopeia~=4.0.13
+Pillow~=7.2.0
